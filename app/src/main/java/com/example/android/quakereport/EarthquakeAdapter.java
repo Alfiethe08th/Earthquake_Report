@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 
 /*
@@ -20,7 +21,20 @@ import java.util.ArrayList;
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
     private static final String LOG_TAG = EarthquakeAdapter.class.getSimpleName();
-
+    /*
+   * Return the formatted date String (i.e. "May 6, 1995") from a Date object.
+   */
+    private String formatDate(Date dateObject) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
+        return dateFormat.format(dateObject);
+    }
+    /*
+     * Return the formatted time String (i.e. "12:20 PM") from a Date object.
+     */
+    private String formatTime(Date dateObject) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        return timeFormat.format(dateObject);
+    }
     /**
      * Creating a custom constructor
      *
@@ -50,37 +64,44 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.lists, parent, false);
         }
-        // Get the {@link Earthquake} object located at this position in the list
+        // To Find the earthquake at a given position in the list of earthquakes
         Earthquake currentEarthquake = getItem(position);
 
         // Find the TextView in the list_item.xml layout with the ID Magnitude
-        TextView magTextView = (TextView) listItemView.findViewById(R.id.Magnitude);
-        // Get the version name from the current AndroidFlavor object and
-        // set this text on the name TextView
-        magTextView.setText(currentEarthquake.getMagnitude());
+        TextView magView = (TextView) listItemView.findViewById(R.id.Magnitude);
+        //Display magnitude of the current earthquake in that TextView
+        magView.setText(currentEarthquake.getMagnitude());
+
 
         // Find the TextView in the lists.xml layout with the ID Location
-        TextView locTextView = (TextView) listItemView.findViewById(R.id.Location);
-        // Get the version number from the current AndroidFlavor object and
-        // set this text on the number TextView
-        locTextView.setText(currentEarthquake.getLocation());
+        TextView primeLocView = (TextView) listItemView.findViewById(R.id.Location_Prime);
+        //Display location of the current earthquake in that TextView
+        primeLocView.setText(currentEarthquake.getLocPrime());
 
-        // Find the TextView in the lists.xml layout with the ID Location
-        TextView dateTextView = (TextView) listItemView.findViewById(R.id.Date);
-        // Get the version number from the current AndroidFlavor object and
-        // set this text on the number TextView
-        dateTextView.setText(currentEarthquake.getDate());
+        TextView locOffsetView = (TextView) listItemView.findViewById(R.id.Location_Offset);
+        //Display location of the current earthquake in that TextView
+        locOffsetView.setText(currentEarthquake.getLocOffSet());
 
-        /*// Find the ImageView in the list_item.xml layout with the ID list_item_icon
 
-        ImageView iconView = (ImageView) listItemView.findViewById(R.id.list_item_icon);
-        // Get the image resource ID from the current AndroidFlavor object and
-        // set the image to iconView
-        iconView.setImageResource(currentAndroidFlavor.getImageResourceId());
-        */
+        //Create a new Date object from the time in milli-sec when the eathquake took place
+        Date dateObject = new Date(currentEarthquake.getmTimeInMilSec());
+        // Find the TextView in the lists.xml layout with the ID Date
+        TextView dateView = (TextView) listItemView.findViewById(R.id.Date);
+        //Format the date String (i.e. "May 6, 1995")
+        String formattedDate = formatDate(dateObject);
+        //Display Date of the current earthquake in that TextView
+        dateView.setText(formattedDate);
 
-        // Return the whole list item layout (containing 2 TextViews and an ImageView)
-        // so that it can be shown in the ListView
+        // Find the TextView in the lists.xml layout with the ID Time
+        TextView timeView = (TextView) listItemView.findViewById(R.id.time);
+        //Format the time String (i.e. "9:30 AM")
+        String formattedtime = formatTime(dateObject);
+        //Display time of the current earthquake in that TextView
+        timeView.setText(formattedtime);
+
         return listItemView;
+
     }
+
+
 }
